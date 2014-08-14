@@ -1,0 +1,26 @@
+<html>
+<head>
+	<title>Submit a gun to the database</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='guns.css') }}" />
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+	<h1>Submit a new gun to the database</h1>
+	<center><form action = "" method = "post" name="Submitform" class="submitform">
+
+	<fieldset id="submitfield">
+Manufacturer: {{form.manufacturer(style="float:right;")}}<br><br>
+Model: {{form.model(style="float:right;")}}<br><br>
+Caliber: {{form.caliber(style="float:right;")}}<br><br>
+<fieldset id="typefield"><legend>Type</legend> {% for field in form.guntype %} {{field}} {{field.label}} {% endfor %}</fieldset><br>
+<fieldset id="action"><legend>Action</legend>{% for field in form.action %} {{field}} {{field.label}}<br><br> {% endfor %}</fieldset><br>
+Capacity: {{form.capacity(style="float:right;")}}<br><br>
+<fieldset id="size"><legend>Size</legend>{% for field in form.size %}{{field}}{{field.label}}<br><br>{% endfor %}</fieldset><br>
+Min price: {{form.minprice(style="float:right;")}}<br><br>
+Max price: {{form.maxprice(style="float:right;")}}<br>
+</fieldset>
+<center><input type="submit" class="submit" value="Submit"></center>
+</form>
+</center>
+</body>
+</html>

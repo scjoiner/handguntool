@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>Details - {{gun.manufacturer}} {{gun.model}}</title>
+		<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='guns.css') }}" />
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	</head>
+	<body>
+		<h1>Details for {{gun.manufacturer}} {{gun.model}}</h1>
+		<center><table id="details">
+			<col width="100px">
+			<col width= "300px">
+		<tr><td align="right"><b>Manufacturer</b></td><td>{{gun.manufacturer}}</td></tr>
+		<tr><td align="right"><b>Model</b></td><td> {{gun.model}}</tr>
+		<tr><td align="right"><b>Type</b></td><td> {{gun.guntype}}</tr>
+		<tr><td align="right"><b>Action</b></td><td> {{gun.action}}</tr>
+		<tr><td align="right"><b>Size</b></td><td> {{gun.size}}</tr>
+		<tr><td align="right"><b>Caliber</b></td><td> {{gun.caliber}}</tr>
+		<tr><td align="right"><b>Capacity</b></td><td> {{gun.capacity}}</tr>
+		<tr><td align="right"><b>Price</b></td><td> ${{gun.minprice}} - ${{gun.maxprice}}</tr>
+		<tr><td align="right"><b>Comments</b></td><td>{{gun.comments}}</tr>
+		</table>
+		{% if gun.photo != "None" %}
+		<img src = "/static/{{gun.photo}}.jpg"><br><br>
+		{% endif %}
+		<input type="submit" class="submit" value = "Back" onclick="window.history.back()">
+	</center>
+	</body>
+</html>

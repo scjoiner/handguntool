@@ -1,0 +1,131 @@
+<html> 
+<head>
+<title>Results - Handgun selector</title>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='guns.css') }}" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="{{url_for('static',filename='sorttable.js')}}"></script>
+<style type="text/css">
+div#container {
+width: 580px;
+margin: 100px auto 0 auto;
+padding: 20px;
+background: #000;
+border: 1px solid #1a1a1a;
+}
+div#pop-up {
+display: none;
+position: absolute;
+width: 280px;
+padding: 10px;
+background: #eeeeee;
+color: #000000;
+border: 1px solid #1a1a1a;
+	font-size: 90%;
+}
+.hidden_comments {
+	display: none;
+}
+tr.highlight_result {
+	background: hsla(92, 96%, 77%, .33);
+}
+</style>
+</head>
+<body>
+{% if guncount > 0 %}
+<h1>Your search returned {{guncount}} guns:</h1>
+<center>Click any column header to sort by that field.</center><br>
+<center><a href="/glossary">What do these terms mean?</a></center><br>
+<center><table id="guns" class="sortable">
+			<col width="175px">
+			<col width= "150px">
+			<col width="auto">
+			<col width="115px">
+			<col width="100px">
+			<col width="200px">
+			<tr><th>Manufacturer</td><th class="sorttable_alpha">Model</th><th>Type</th><th>Action</th><th>Size</th><th>Caliber(s)</th><th class="sorttable_numeric">Price</th><th>Photo</th><th>Details</th><th class="hidden_comments">HIDDEN COMMENTS YOU CAN'T SEE THIS</th></tr>
+			<tr>{% for gun in handgunlist %}
+			<td>{{gun.manufacturer}}</td><td>{{gun.model}}</td><td>{{gun.guntype}}</td><td>{{gun.action}}</td><td>{{gun.size}}</td><td>{{gun.caliber}}</td><td><center><a href="http://www.gunbroker.com/All/BI.aspx?Keywords={{gun.model}}">${{gun.minprice}}+</a></center></td><td align="center"><a href="/static/{{gun.photo}}.jpg" class="trigger">Link</a></td><td align="center"><a href="{{url_for('showgun',model=gun.model)}}" class="comments">Details</a></td><td class="hidden_comments">{{gun.comments}}</td></tr>
+			{% endfor %}
+		</table></center><br><br>
+		{% else %}
+			<h1>Found no matches :(</h1>
+		{% endif %}
+		<center><input type="submit" class="submit" value = "Back" onclick="window.history.back()"></center>
+<div id="pop-up"><img id="hoverpic" src="" alt="Loading..." width="200" ></div>
+<div id="comments"><p id="gun_comments">Sample Comments</p></div>
+<!--- -->
+<script>
+$(document).ready(function() {
+	var leftOffset = 30;
+	var downOffset = 10;
+	var upOffset = 30;
+	
+	// For the pic popup:
+	$(".trigger").hover(function(e) {
+		// Load the div:
+		$('#hoverpic').attr('src', $(this).attr('href') );
+		// Show the div:
+		$('div#pop-up').show();
+		$('#hoverpic').show();
+	}, function() {
+		$('div#pop-up').hide();
+	});
+	
+	$('.trigger').mousemove(function(e) {
+  		$("div#pop-up").css('top', e.pageY - ( $("#pop-up").height() / 2 ) )
+  			.css('left', e.pageX - $("#pop-up").width() -leftOffset);
+	});
+
+	// Row mouseover highlight business:
+	$('tr').mouseover(function() {
+		//TODO: highlight current row
+		$(this).addClass('highlight_result');
+	}).mouseleave(function() {
+		//TODO: unhighlight current row
+			$(this).removeClass('highlight_result');
+		}); 
+
+
+	// For the comments popup:
+	$('a.comments').hover(function() {
+		$('p#gun_comments').html( $(this).parent().siblings('.hidden_comments').html()  );
+		$('div#comments').show();
+	}, function() { 
+		$('div#comments').hide();
+	});
+
+	$('a.comments').mousemove(function(e) {
+		$('div#comments').css('top', e.pageY - ( $('div#comments').height() / 2) )
+			.css('left', e.pageX - $('div#comments').width() - leftOffset);
+	});
+});	
+	
+</script>
+
+<style type="text/css">
+	div#pop-up {
+		display: none;
+		position: absolute;
+		width: 210px;
+		padding: 10px;
+		background: #ffffff;
+		color: #000000;
+		border: 1px solid #1a1a1a;
+		font-size: 90%;
+		text-align: center;
+	}
+	div#comments {
+		display: none;
+		position: absolute;
+		width: 300px;
+		padding: 10px;
+		background: #ffffff;
+		color: #000000;
+		border: 1px solid #1a1a1a;
+		font-size: 90%;
+		text-align: left ;
+	}
+	</style>
+	<!-- !-->
+	</body>
+</html>

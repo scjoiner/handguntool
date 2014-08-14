@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<title>Results - Handgun selector</title>
+		<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='guns.css') }}" />
+	</head>
+	<body>
+		{% if guncount > 0 %}
+		<h1>Your search returned {{guncount}} guns:</h1>
+		<table id="guns">
+		<tr><th>Manufacturer</td><th>Model</th><th>Type</th><th>Action</th><th>Size</th><th>Caliber(s)</th><th>Price Range</th><th>Photo</th></tr>
+		<tr>{% for gun in handgunlist %}
+		<td>{{gun.manufacturer}}</td><td>{{gun.model}}</td><td>{{gun.guntype}}</td><td>{{gun.action}}</td><td>{{gun.size}}</td><td>{{gun.caliber}}</td><td>${{gun.minprice}} - ${{gun.maxprice}}</td><td>{{gun.photo}}</td></tr>
+		{% endfor %}
+		</table><br><br>
+		{% else %}
+		<h1>Found no matches :(</h1>
+		{% endif %}
+		<A HREF="javascript:javascript:history.go(-1)">Click here to change your search!</A>
+
+
+	</body>
+</html>

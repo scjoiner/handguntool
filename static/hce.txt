@@ -1,0 +1,4 @@
+2014-07-31 18:55:33,170 Starting new HTTP connection (1): update_checker.bryceboe.com
+2014-07-31 18:55:33,947 Starting new HTTPS connection (1): ssl.reddit.com
+2014-07-31 18:55:35,948 Starting new HTTP connection (1): www.reddit.com
+2014-07-31 18:55:36,363 Logged in to reddit.

@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<title>/r/Guns Handgun Tool</title>
+		<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='guns.css') }}" />
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+		<script id="tinyhippos-injected">if (window.top.ripple) { window.top.ripple("bootstrap").inject(window, document); }</script>
+		 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+	</head>
+<body>
+<h1>/r/Guns Handgun Recommendation Tool</h1>
+<h3>Please choose the relevant options from each menu.<br>
+	Select all that apply.</h3>
+<center>
+<form action = "" method = "post" name="gunform">
+	{{form.csrf_token}}
+	<left>
+		<fieldset id = "type_field"><legend>Firearm type</legend>
+		{% for field in form.guntype %}
+		{{field}} {{field.label}}<br>
+		{% endfor %}
+		</fieldset><br>
+
+		<fieldset id = "action_field">
+		<legend>Action type(s)</legend>
+		{{form.striker(class="hide_revolver")}} <span class="hide_revolver">Striker-fired</span><br class="hide_revolver">
+		{{form.sa}} Single Action<br>
+		{{form.da(class="hide_semi")}} <span class="hide_semi">Double Action</span><br class="hide_semi">
+		{{form.dao}} DAO<br>
+		{{form.sada(class="hide_revolver")}} <span class="hide_revolver">SA/DA</span><br class="hide_revolver">
+		{{form.anyaction(class="any")}} Any<br>
+		</fieldset><br>
+
+		<fieldset id = "caliber_field">
+		<legend>Caliber(s)</legend>
+		{{form.c22}} .22 LR<br>
+		{{form.c380}} .380 ACP<br>
+		{{form.c9}} 9mm Parabellum<br>
+		{{form.c40}} .40 S&W<br>
+		{{form.c45}} .45 ACP<br>
+		{{form.c10}} 10mm<br>
+		{{form.c357sig}} .357 SIG<br>
+		{{form.c50}} .50 AE<br>
+		{{form.c918}} 9x18mm Makarov<br>
+		{{form.c38}} .38 Spl<br>
+		{{form.c357}} .357 Magnum<br>
+		{{form.cany(class="any")}} Any<br>
+		</fieldset><br>
+
+		<fieldset id = "size_field">
+		<legend>Size</legend>
+		{{form.full}} Full-sized<br>
+		{{form.compact}} Compact<br>
+		{{form.subcompact}} Subcompact<br>
+		{{form.anysize(class="any")}} Any<br>
+		</fieldset><br>
+
+		<fieldset id = "other_field">
+		<legend>Other</legend>
+		{{form.maxprice.label(class="other")}} {{form.maxprice(style="width:70px;float:right;vertical-align:top;")}}
+		{% for error in form.errors.maxprice %}
+		<span style="color: red;">[{{error}}]</span>
+		{% endfor %}<br><br>	
+		{{form.keywords.label(class="other")}} {{form.keywords(style="width:70px;float:right;")}}
+		</fieldset>
+	</left>
+<br>
+<input class="submit" type="button" value="Clear" id="clearAll" style="width:95px">
+<input class = "submit" type = "submit" value = "Submit" style="width:95px;float:right;">
+
+</form>
+</center>
+
+<script>
+$(document).ready(function() {
+	// When a checkbox of class 'any' is changed,
+	$(".any").change(function() {
+		if ($(this).is(":checked")) {
+			// Set all sibling checkboxes  to unchecked.
+			$(this).siblings(":checkbox").prop("checked", false);
+		}
+	});
+	// When a checkbox is changed,
+	$(":checkbox").change(function() {
+		if ($(this).attr('class') !== 'any') {
+			// Set sibling checkbox of class any to checked.
+			$(this).siblings(":checkbox.any").prop("checked", false);
+		}
+	});
+	// When the input with id clearAll is clicked,
+	$("#clearAll").click(function() {
+		// Set all checkboxes to unchecked
+		$(":checkbox").prop("checked", false);
+		$("#maxprice").val("0.00");
+		$("#keywords").val("");
+	});
+
+	$("[name='guntype']").change(function() {
+		// #guntype-0 is ID of checkbox for semiauto. 
+		if ($("#guntype-0").is(":checked")) {
+			$(".hide_semi").hide(400,'swing');
+		}
+		else {
+			$(".hide_semi").show(400,'swing');
+		}
+		// #guntype-1 is ID of checkbox for revolver. When that's checked, disable following:
+		if ($("#guntype-1").is(":checked")) {
+			$(".hide_revolver").hide(400,'swing');
+		}
+		else {
+			$(".hide_revolver").show(400,'swing');
+		}
+		// #guntype-2 is ID of checkbox for any gun. When that's checked,
+		//  all ooptions should be available.
+		if ($("#guntype-2").is(":checked")) {
+			$("input:checkbox").show(400,'swing');
+		}
+	});
+});
+</script>
+</body>
+</html>

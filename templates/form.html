@@ -1,0 +1,272 @@
+
+<html>
+<head>
+	<title>Home - Handgun Tool</title>
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='form.css') }}" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="{{url_for('static',filename='sorttable.js')}}"></script>
+	<style type="text/css">
+		div#container {
+		width: 580px;
+		margin: 100px auto 0 auto;
+		padding: 20px;
+		background: #000;
+		border: 1px solid #1a1a1a;
+		}
+		div#pop-up {
+		display: none;
+		position: absolute;
+		width: 280px;
+		padding: 10px;
+		background: #eeeeee;
+		color: #000000;
+		border: 1px solid #1a1a1a;
+			font-size: 90%;
+		}
+		.hidden_comments {
+			display: none;
+		}
+		tr.highlight_result {
+			background: hsla(92, 96%, 77%, .33);
+		}
+	</style>
+</head>
+<body>
+
+<div id="wrap">
+<div id="header"><left><h1 class="headtext"><left>Phteve's Handgun Selector</left></h1></left></div>
+<div id="nav">
+	<ul>
+	<li><input type="submit" value="Home" onclick="location.href='{{url_for('mergedform')}}'" class="small"></li>
+	<li><input type="submit" value="Submit" onclick="location.href='https://docs.google.com/forms/d/1zgl1-zFMrfxJKRK-13M8QWT38JUk3mB6dT-vtTe1HZM/viewform'" class="small"></li>
+	<li><input type="submit" value="Glossary" onclick="location.href='{{url_for('glossary')}}'" class="small"></li>
+	<li><input type="submit" value="About" onclick="location.href='{{url_for('about')}}'" class="small"></li>
+	<li><input type="submit" value="Contact" onclick="location.href='{{url_for('contact')}}'" class="small"></li>
+</ul>
+</div>
+
+<div id="sidebar">
+<h2>Criteria</h2>
+<form action = "" method = "post" name="gunform">
+	{{form.csrf_token}}
+
+<input class="submit clearAll" type="button" value="Clear" id="clearAll" style="width:80px">
+<input class = "submit" type = "submit" value = "Submit" style="width:80px;float:right;"><br><br>
+
+	<left>
+		<fieldset id = "type_field"><legend>Firearm type</legend>
+		{% for field in form.guntype %}
+		{{field}} {{field.label}}<br>
+		{% endfor %}
+		</fieldset><br>
+
+		<fieldset id = "action_field">
+		<legend>Action type(s)</legend>
+		{{form.striker(class="hide_revolver")}} <span class="hide_revolver">Striker-fired</span><br class="hide_revolver">
+		{{form.sa}} Single Action<br>
+		{{form.da(class="hide_semi")}} <span class="hide_semi">Double Action</span><br class="hide_semi">
+		{{form.dao}} DAO<br>
+		{{form.sada(class="hide_revolver")}} <span class="hide_revolver">SA/DA</span><br class="hide_revolver">
+		{{form.anyaction(class="any")}} Any<br>
+		</fieldset><br>
+
+		<fieldset id = "caliber_field">
+		<legend>Caliber(s)</legend>
+		{{form.c22}} .22 LR<br>
+		{{form.c380}} .380 ACP<br>
+		{{form.c9}} 9mm Parabellum<br>
+		{{form.c40}} .40 S&W<br>
+		{{form.c45}} .45 ACP<br>
+		{{form.c10}} 10mm<br>
+		{{form.c357sig}} .357 SIG<br>
+		{{form.c50}} .50 AE<br>
+		{{form.c918}} 9x18mm Makarov<br>
+		{{form.c38}} .38 Spl<br>
+		{{form.c357}} .357 Magnum<br>
+		{{form.cany(class="any")}} Any<br>
+		</fieldset><br>
+
+		<fieldset id = "size_field">
+		<legend>Size</legend>
+		{{form.full}} Full-sized<br>
+		{{form.compact}} Compact<br>
+		{{form.subcompact}} Subcompact<br>
+		{{form.anysize(class="any")}} Any<br>
+		</fieldset><br>
+
+		<fieldset id = "other_field">
+		<legend>Other</legend>
+		{{form.maxprice.label(class="other")}} {{form.maxprice(style="width:70px;float:right;vertical-align:top;")}}
+		{% for error in form.errors.maxprice %}
+		<span style="color: red;">[{{error}}]</span>
+		{% endfor %}<br><br>	
+		{{form.keywords.label(class="other")}} {{form.keywords(style="width:70px;float:right;")}}
+		</fieldset>
+	</left>
+<br>
+<input class="submit clearAll" type="button" value="Clear" id="clearAll" style="width:80px">
+<input class = "submit" type = "submit" value = "Submit" style="width:80px;float:right;">
+
+</form>
+
+<script>
+$(document).ready(function() {
+	// When a checkbox of class 'any' is changed,
+	$(".any").change(function() {
+		if ($(this).is(":checked")) {
+			// Set all sibling checkboxes  to unchecked.
+			$(this).siblings(":checkbox").prop("checked", false);
+		}
+	});
+	// When a checkbox is changed,
+	$(":checkbox").change(function() {
+		if ($(this).attr('class') !== 'any') {
+			// Set sibling checkbox of class any to checked.
+			$(this).siblings(":checkbox.any").prop("checked", false);
+		}
+	});
+	// When the input with id clearAll is clicked,
+	$(".clearAll").click(function() {
+		// Set all checkboxes to unchecked
+		$(":checkbox").prop("checked", false);
+		$("#maxprice").val("0.00");
+		$("#keywords").val("");
+	});
+
+	$("[name='guntype']").change(function() {
+		// #guntype-0 is ID of checkbox for semiauto. 
+		if ($("#guntype-0").is(":checked")) {
+			$(".hide_semi").hide(400,'swing');
+		}
+		else {
+			$(".hide_semi").show(400,'swing');
+		}
+		// #guntype-1 is ID of checkbox for revolver. When that's checked, disable following:
+		if ($("#guntype-1").is(":checked")) {
+			$(".hide_revolver").hide(400,'swing');
+		}
+		else {
+			$(".hide_revolver").show(400,'swing');
+		}
+		// #guntype-2 is ID of checkbox for any gun. When that's checked,
+		//  all ooptions should be available.
+		if ($("#guntype-2").is(":checked")) {
+			$("input:checkbox").show(400,'swing');
+		}
+	});
+});
+</script>
+</div>
+
+<div id="main">
+<h2>Results</h2>
+	{% if guncount > 0 %}
+	<table id="guns" class="sortable">
+			<col width="175px">
+			<col width= "150px">
+			<col width="100px">
+			<col width="110px">
+			<col width="100px">
+			<col width="200px">
+			<col width="100px">
+
+			<tr><th>Manufacturer</td><th class="sorttable_alpha">Model</th><th>Type</th><th>Action</th><th>Size</th><th>Caliber(s)</th><th class="sorttable_numeric">Price</th><th class="sorttable_nosort">Photo</th><th class="sorttable_nosort">Details</th><th class="hidden_comments">HIDDEN COMMENTS YOU CAN'T SEE THIS</th></tr>
+		
+			<tr>{% for gun in handgunlist %}
+			<td>{{gun.manufacturer}}</td><td>{{gun.model}}</td><td>{{gun.guntype}}</td><td>{{gun.action}}</td><td>{{gun.size}}</td><td>{{gun.caliber}}</td><td><center><a href="http://www.gunbroker.com/All/BI.aspx?Keywords={{gun.model}}">${{gun.minprice}}+</a></center></td><td align="center"><a href="/static/{{gun.photo}}.jpg" class="trigger">Link</a></td><td align="center"><a class="comments"><input type="submit" value="Details" onclick="location.href='{{url_for('showgun',model=gun.model)}}'" class="small"></a></td><td class="hidden_comments">{{gun.comments}}</td></tr>
+			{% endfor %}
+		</table>
+		<h3>Total: {{guncount}}</h3>
+
+	{% else %}
+	<h3>No guns meet your criteria.<h3>
+	{% endif %}
+<div id="pop-up"><img id="hoverpic" src="" alt="Loading..." width="200" ></div>
+<div id="comments"><p id="gun_comments">Sample Comments</p></div>
+<!--- -->
+<script>
+$(document).ready(function() {
+	var leftOffset = 30;
+	var downOffset = 10;
+	var upOffset = 30;
+	
+	// For the pic popup:
+	$(".trigger").hover(function(e) {
+		// Load the div:
+		$('#hoverpic').attr('src', $(this).attr('href') );
+		// Show the div:
+		$('div#pop-up').show();
+		$('#hoverpic').show();
+	}, function() {
+		$('div#pop-up').hide();
+	});
+	
+	$('.trigger').mousemove(function(e) {
+  		$("div#pop-up").css('top', e.pageY - ( $("#pop-up").height() / 2 ) )
+  			.css('left', e.pageX - $("#pop-up").width() -leftOffset);
+	});
+
+	// Row mouseover highlight business:
+	$('tr').mouseover(function() {
+		//TODO: highlight current row
+		$(this).addClass('highlight_result');
+	}).mouseleave(function() {
+		//TODO: unhighlight current row
+			$(this).removeClass('highlight_result');
+		}); 
+
+
+	// For the comments popup:
+	$('a.comments').hover(function() {
+		$('p#gun_comments').html( $(this).parent().siblings('.hidden_comments').html()  );
+		$('div#comments').show();
+	}, function() { 
+		$('div#comments').hide();
+	});
+
+	$('a.comments').mousemove(function(e) {
+		$('div#comments').css('top', e.pageY - ( $('div#comments').height() / 2) )
+			.css('left', e.pageX - $('div#comments').width() - leftOffset);
+	});
+});	
+	
+</script>
+
+<style type="text/css">
+	div#pop-up {
+		display: none;
+		position: absolute;
+		width: 210px;
+		padding: 10px;
+		background: #ffffff;
+		color: #000000;
+		border: 1px solid #1a1a1a;
+		font-size: 90%;
+		text-align: center;
+	}
+	div#comments {
+		display: none;
+		position: absolute;
+		width: 300px;
+		padding: 10px;
+		background: #ffffff;
+		color: #000000;
+		border: 1px solid #1a1a1a;
+		font-size: 90%;
+		text-align: left ;
+	}
+</style>
+	<!-- !-->
+
+</div>
+
+<div id="footer">
+<p><font size="2px">© Copyright 2014 Phteven_j All rights reserved.</font></p>
+</div>
+
+</div>
+</div>
+
+</body>
+</html>
