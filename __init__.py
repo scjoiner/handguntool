@@ -13,6 +13,7 @@ def gunlist():
         form = gunform(request.form)
         if form.validate():	
             handgunlist = process_data(form)
+            db.close()
     	    guncount = len(handgunlist)
     	    return render_template("results.html",handgunlist = handgunlist, guncount = guncount)
     else:
@@ -33,6 +34,7 @@ def mergedform():
         form = gunform(request.form)
         if form.validate(): 
             handgunlist = process_data(form)
+            db.close()
             guncount = len(handgunlist)
             return render_template("form.html",form=form,handgunlist = handgunlist, guncount = guncount)
     else:

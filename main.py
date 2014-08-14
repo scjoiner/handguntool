@@ -97,9 +97,9 @@ def parse_wiki_page():
 		elif "dao" in action.lower():
 			action = "DAO"
 		elif "sa" in action.lower() or "single" in action.lower():
-			action = "SA"
+			action = "Single"
 		elif "da" in action.lower() or "double" in action.lower():
-			action = "DA"
+			action = "Double"
 		else:
 			action = "Other"
 
@@ -165,12 +165,15 @@ def process_data(form):
 	#keywords
 	if form.keywords.data:
 		keywords = form.keywords.data.split(',')
-	gunlist = match_guns(handguns, guntype,actions,sizes,calibers,price,keywords)
+	print form.safety.data
+
+	gunlist = match_guns(handguns, guntype,actions,sizes,calibers,price,keywords,form.safety.data,form.decocker.data,form.rail.data)
 	return gunlist
 
-def match_guns(handguns, guntype,actions,sizes,calibers,price,keywords):
+def match_guns(handguns, guntype,actions,sizes,calibers,price,keywords,safety,decocker,rail):
 	matches = []
 	typematch, actionmatch, sizematch, calibermatch, pricematch = False, False, False, False, False
+	railmatch, decockermatch, safetymatch = False, False, False
 	keymatch = False
 	for gun in handguns:
 
@@ -202,7 +205,14 @@ def match_guns(handguns, guntype,actions,sizes,calibers,price,keywords):
 		if keywords == [] or any (str(word.lower()) in str(gun.comments.lower()) for word in keywords):
 			keymatch = True
 		else:
-			continue		
+			continue	
+
+		if rail and "rail" not in gun.comments.lower():
+			continue
+		if decocker and "decocker" not in gun.comments.lower():
+			continue
+		if safety and "safety" not in gun.comments.lower():
+			continue
 
 		if all([typematch,actionmatch,sizematch,calibermatch,pricematch,keymatch]):
 			matches.append(gun)

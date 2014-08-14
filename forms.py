@@ -5,10 +5,13 @@ class gunform(Form):
 	guntype = RadioField('guntype', choices=[('Semiauto','Semiautomatic'),('Revolver','Revolver'),('Any','Any')], default='Any', validators = [Required()]) 
 	maxprice = DecimalField('Max Price',default = 0)
 	keywords = TextField('Keywords')
+	safety = BooleanField(description='Safety')
+	rail = BooleanField(description = "Rail")
+	decocker = BooleanField(description="Decocker")
 
 	#action checkboxes
-	sa = BooleanField('SA',description = 'SA')
-	da = BooleanField('DA',description = 'DA')
+	sa = BooleanField('SA',description = 'Single')
+	da = BooleanField('DA',description = 'Double')
 	dao = BooleanField('DAO',description = 'DAO')
 	striker = BooleanField('Striker', description = "Striker")
 	sada = BooleanField('SA/DA', description = "SA/DA")
