@@ -70,8 +70,8 @@ def add_gun_to_db(handgun):
 def update_photos():
 	photos = {}
 	allguns = Handguns.select()
-	#with open ("/var/www/FlaskApp/FlaskApp/static/photos.json",'r') as f:
-	with open ("photos.json",'r') as f:
+	with open ("/var/www/FlaskApp/FlaskApp/static/photos.json",'r') as f:
+	#with open ("photos.json",'r') as f:
 	
 		photos.update(json.load(f))
 	for gun in allguns:

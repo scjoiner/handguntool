@@ -2223,7 +2223,7 @@ Caliber: .45 Colt, .357 Magnum
 
 Type: Revolver
 
-Action: Double
+Action: Single
 
 Capacity: 6
 

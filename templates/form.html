@@ -163,18 +163,18 @@ $(document).ready(function() {
 <h2>Results</h2>
 	{% if guncount > 0 %}
 	<table id="guns" class="sortable">
-			<col width="175px">
+			<!--- <col width="175px">
 			<col width= "150px">
 			<col width="100px">
 			<col width="110px">
 			<col width="100px">
 			<col width="200px">
-			<col width="100px">
+			<col width="100px"> ---!>
 
-			<tr><th>Manufacturer</td><th class="sorttable_alpha">Model</th><th>Type</th><th>Action</th><th>Size</th><th>Caliber(s)</th><th class="sorttable_numeric">Price</th><th class="sorttable_nosort">Photo</th><th class="sorttable_nosort">Details</th><th class="hidden_comments">HIDDEN COMMENTS YOU CAN'T SEE THIS</th></tr>
+			<tr><th style="min-width:175px;">Manufacturer</td><th class="sorttable_alpa">Model</th><th style="min-width:100px;">Type</th><th style="min-width:110px;">Action</th><th>Size</th><th style="min-width:125px;">Caliber(s)</th><th class="sorttable_numeric" style="min-width:100px;">Price</th><th class="sorttable_nosort">Photo</th><th class="sorttable_nosort">Details</th><th class="hidden_comments">HIDDEN COMMENTS YOU CAN'T SEE THIS</th></tr>
 		
 			<tr>{% for gun in handgunlist %}
-			<td>{{gun.manufacturer}}</td><td>{{gun.model}}</td><td>{{gun.guntype}}</td><td>{{gun.action}}</td><td>{{gun.size}}</td><td>{{gun.caliber}}</td><td><center><a href="http://www.gunbroker.com/All/BI.aspx?Keywords={{gun.model}}">${{gun.minprice}}+</a></center></td><td align="center"><a href="/static/{{gun.photo}}.jpg" class="trigger">Link</a></td><td align="center"><a class="comments"><input type="submit" value="Details" onclick="location.href='{{url_for('showgun',model=gun.model)}}'" class="small"></a></td><td class="hidden_comments">{{gun.comments}}</td></tr>
+			<td>{{gun.manufacturer}}</td><td>{{gun.model}}</td><td>{{gun.guntype}}</td><td>{{gun.action}}</td><td>{{gun.size}}</td><td>{{gun.caliber}}</td><td><center><a href="http://www.gunbroker.com/All/BI.aspx?Keywords={{gun.model}}">${{gun.minprice}}+</a></center></td><td align="center"><a href="/static/{{gun.photo}}.jpg" class="trigger"><img height=25 width=30 src="/static/{{gun.photo}}.jpg"></a></td><td align="center"><a class="comments"><input type="submit" value="Details" onclick="location.href='{{url_for('showgun',model=gun.model)}}'" class="small"></a></td><td class="hidden_comments">{{gun.comments}}</td></tr>
 			{% endfor %}
 		</table>
 		<h3>Total: {{guncount}}</h3>
